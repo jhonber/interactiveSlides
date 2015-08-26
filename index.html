@@ -12,16 +12,71 @@ h1, h2, h3 {
 
 <textarea id="source">
 class: center, middle
-
-# .center[Sockets.io]
-
----
-
-# other1
+# WebSockets and Sockets.io
 
 ---
 
-# other2
+class: center, middle
+# What is the problem?
+We want to communicate the server with the client.
+--
+It sounds simple, right :P
+--
+How I can do that?
+--
+
+## Reverse Ajax
+Is a concept for sending data from the server to the client.
+---
+
+## How I can implement it?
+Exists diffent Reverse Ajax communication techniques, among which:
+--
+
+* polling
+* streaming
+* Comet
+* long polling
+---
+
+## HTTP polling
+<img src="images/fig01.gif" alt="fig01.gif"/>
+
+--
+
+Polling involves issuing a request from the client to the server to ask for some data
+
+--
+
+- **Time between requests**
+- **consume bandwidth**
+
+--
+
+
+
+class: center, middle
+# What is WebSocket?
+
+The HTML5 WebSockets specification defines an API that enables a full-duplex communication channel
+between the user's browser and a server, that channel operates through a single socket over the Web.
+
+WebSocket represents the next evolutionary step in web communication compared to Comet and Ajax
+---
+class: center, middle
+# Architecture
+<img src="images/websocket-architecture.jpg" alt="websocket-architecture.jpg"/>
+---
+
+# What problem resolves?
+class: center, middle
+- Reduction in unnecessary network traffic and latency compared to the unscalable polling and long-polling
+---
+
+# what about Socket.io?
+
+--
+
 
 </textarea>
 
