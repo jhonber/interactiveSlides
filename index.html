@@ -1,0 +1,83 @@
+<style type="text/css">
+@import url(//fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@import url(//fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+@import url(//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+body { font-family: 'Droid Serif'; }
+h1, h2, h3 {
+  font-family: 'Yanone Kaffeesatz';
+  font-weight: normal;
+}
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+</style>
+
+<textarea id="source">
+class: center, middle
+
+# .center[Sockets.io]
+
+---
+
+# other1
+
+---
+
+# other2
+
+</textarea>
+
+<script src="//gnab.github.io/remark/downloads/remark-latest.min.js"> </script>
+<script>
+//var slideshow = remark.create();
+</script>
+
+<script src="bower_components/jquery/dist/jquery.js"> </script>
+<script src="bower_components/socket.io-client/socket.io.js"> </script>
+
+
+<div id="login">
+  <h2> Login: </h2>
+  <input id="username" type="text">
+  <button onclick="login()"> Login </button>
+</div>
+
+
+<script>
+var socket = io();
+
+function login () {
+  var username = document.getElementById('username').value;
+  socket.emit('new user', username);
+}
+
+socket.on('keyEvent', function (data) {
+  document.location.href = data.url;
+});
+
+socket.on('login', function (data) {
+  if (data.ok) {
+    document.getElementById('source').style.display = "block";
+    document.getElementById('login').style.display = "none";
+    var slideshow = remark.create();
+  }
+  else alert('Something was wrong! :S');
+});
+
+$(function () {
+  document.getElementById('source').style.display = "none";
+
+}).keyup(function(e) {
+  var url = document.location.href;
+
+  if (e.keyCode == 37 || e.keyCode == 38) {
+    socket.emit('keyEvent', {url: url});
+  }
+
+  if (e.keyCode == 39 || e.keyCode == 40) {
+    socket.emit('keyEvent', {url: url});
+  }
+});
+
+
+</script>
+
+
