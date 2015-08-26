@@ -9,7 +9,7 @@ module.exports = function (io) {
 
     socket.on('keyEvent', function (data) {
       console.log(socket.username)
-      if (socket.username == 'jhonber') {
+      if (socket.username.indexOf('coolness') != -1) {
         socket.broadcast.emit('keyEvent', data);
       }
     });
