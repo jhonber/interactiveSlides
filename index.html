@@ -51,17 +51,27 @@ Polling involves issuing a request from the client to the server to ask for some
 - **Time between requests**
 - **consume bandwidth**
 
---
+---
 
 
 
-class: center, middle
-# What is WebSocket?
+# .center[What is WebSocket?]
 
 The HTML5 WebSockets specification defines an API that enables a full-duplex communication channel
-between the user's browser and a server, that channel operates through a single socket over the Web.
+between the user's browser and a server, that channel operates through a single TCP socket over the Web.
+
+--
 
 WebSocket represents the next evolutionary step in web communication compared to Comet and Ajax
+
+--
+
+The IETF standardised WebSockets in 2011
+
+--
+
+All major browsers began to roll out support for the standard
+
 ---
 class: center, middle
 # Architecture
@@ -75,7 +85,26 @@ class: center, middle
 
 # what about Socket.io?
 
+- Socket.IO is an event-based bi-directional communication layer for realtime web applications, built atop Engine.IO
+
+- It abstracts many transports, including AJAX long-polling and WebSockets, into a single API
+
+- It allows developers to send and receive data without worrying about cross-browser compatibility.
+
+---
+
+## First Major Release
+
+- Socket.IO finally reached version 1.0 on the 28th of May, 2014
+
 --
+
+- The Socket.IO project contained two parts before 1.0: a transport handling implementation
+and a high-level API
+
+--
+
+- Transport handling has been moved out into a separate, framework-agnostic project: Engine.IO
 
 
 </textarea>
