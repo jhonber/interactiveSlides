@@ -59,7 +59,7 @@ socket.on('login', function (data) {
     document.getElementById('login').style.display = "none";
     var slideshow = remark.create();
   }
-  else alert('Something was wrong! :S');
+  else alert('User "' + data.username + '" is already used.');
 });
 
 $(function () {

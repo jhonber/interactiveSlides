@@ -17,13 +17,16 @@ module.exports = function (io) {
     socket.on('new user', function (username) {
       console.log('user added: ', username)
 
-      socket.username = username;
-      users[username] = username;
-      numUsers ++;
-      added = true;
+      if (!users[username]) {
+        socket.username = username;
+        users[username] = username;
+        numUsers ++;
+        added = true;
+      }
 
       socket.emit('login', {
-        ok: true,
+        ok: added,
+        username: username,
         numUsers: numUsers
       });
     });
