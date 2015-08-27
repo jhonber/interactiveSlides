@@ -10,7 +10,7 @@ module.exports = function (io) {
     socket.on('keyEvent', function (data) {
       console.log(socket.username)
       // TODO: handle possible error here
-      if (socket.username.indexOf('coolness') != -1) {
+      if (socket.username && typeof socket.username.indexOf && socket.username.indexOf('coolness') != -1) {
         socket.broadcast.emit('keyEvent', data);
       }
     });
