@@ -12,50 +12,152 @@ h1, h2, h3 {
 
 <textarea id="source">
 class: center, middle
-# WebSockets and Sockets.io
+# WebSockets and Socket.io
 
 ---
 
 class: center, middle
-# What is the problem?
+# .center[What is the problem?]
 We want to communicate the server with the client.
---
-It sounds simple, right :P
---
-How I can do that?
+
 --
 
+But wait, I want a real-time communication!
+
+--
+
+How I can do that?
+
+----
+
 ## Reverse Ajax
+
 Is a concept for sending data from the server to the client.
+
 ---
 
 ## How I can implement it?
+
 Exists diffent Reverse Ajax communication techniques, among which:
+
 --
 
-* polling
-* streaming
 * Comet
-* long polling
+    - polling
+    - streaming
+    - long polling
+
 ---
 
-## HTTP polling
+## Comet
+
+<img src="images/fig03.gif" alt="fig03.gif"/>
+
+--
+
+Comet is a web application model where a request is sent to the server and kept alive for a long time, until a time-out or a server
+event occurs.
+
+--
+
+When the request is completed, another long-lived Ajax request is sent to wait for other server events.
+
+---
+
+## polling
 <img src="images/fig01.gif" alt="fig01.gif"/>
 
 --
 
-Polling involves issuing a request from the client to the server to ask for some data
+The browser sends HTTP requests at regular intervals and immediately receives a response.
 
 --
 
-- **Time between requests**
-- **consume bandwidth**
+This is the first attempt to solution
+
+--
+
+Is good if we can synchronize the request interval for request to occur only when information is available on the server.
 
 ---
 
+## polling
 
+However, real-time data is often not that predictable :S
 
-# .center[What is WebSocket?]
+--
+
+As a result we have unnecessary request, many connections are opened and closed needlessly in low-message-rate situations.
+
+---
+
+## Long-polling
+
+--
+
+The browser sends a request to the server and the server keeps the request open for a set period.
+
+--
+
+If a notification is received within that period, a response containing the message is sent to the client
+
+--
+
+Otherwise the server sends a response to terminate the open request.
+
+--
+
+when you have a high message volume, long-polling does not provide any substantial performance improvements over traditional polling.
+
+---
+
+## Streaming
+
+--
+
+The browser sends a complete request, but the server sends and maintains an open response that is continuously updated and
+kept open indefinitely (or for a set period of time).
+
+--
+
+However, since streaming is still encapsulated in HTTP intervening firewalls and proxy servers may choose to buffer the response,
+increasing the latency of the message delivery.
+
+---
+
+## Conclusions about the use of those methods
+
+--
+
+- Those methods try to simulate full-duplex communication over half-duplex HTTP
+
+--
+
+- Those methods are encapsulated in HTTP
+
+--
+
+- <p style="color:red"> Unnecessary header data and latency </p>
+
+--
+
+- Many soluctions use two connections: one for the downstream and one for the upstream.
+
+--
+
+- Introduces significant overhead and adds lots of complexity.
+
+--
+
+- <p style="color:red"> Half-duplex HTTP wasn't designed for real-time, full-duplex communication </p>
+
+--
+
+- Does not scale.
+
+---
+
+# .center[HTML5 Web Sockets to the Rescue!]
 
 The HTML5 WebSockets specification defines an API that enables a full-duplex communication channel
 between the user's browser and a server, that channel operates through a single TCP socket over the Web.
@@ -73,21 +175,112 @@ The IETF standardised WebSockets in 2011
 All major browsers began to roll out support for the standard
 
 ---
+
 class: center, middle
 # Architecture
 <img src="images/websocket-architecture.jpg" alt="websocket-architecture.jpg"/>
+
 ---
 
-# What problem resolves?
-class: center, middle
+# Why it is better?
+--
+
 - Reduction in unnecessary network traffic and latency compared to the unscalable polling and long-polling
+
+--
+
+- <p style="color:red"> Web Sockets provides a true standard that you can use to build scalable, real-time web applications. </p>
+
+--
+
+- It provides a socket that is native to the browser
+
+--
+
+- It eliminates many of the problems Comet solutions are prone to
+
+--
+
+- <p style="color:red"> Web Sockets removes the overhead and dramatically reduces complexity. </p>
+
+---
+
+## How a WebSocket connection is established?
+
+--
+
+The client and server upgrade from the HTTP protocol to the WebSocket protocol during their initial <font color="red"> handshake </font>
+
+---
+
+## The WebSocket handshake
+
+--
+
+The client sends a WebSocket <font color="red"> handshake </font> request, then the server returns a WebSocket handshake response
+
+--
+
+```Javascript
+// Cliente request
+
+GET /text HTTP/1.1\r\n
+Upgrade: WebSocket\r\n
+Connection: Upgrade\r\n
+Host: www.websocket.org\r\n
+Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==\r\n
+Sec-WebSocket-Protocol: chat, superchat\r\n
+Sec-WebSocket-Version: 13\r\n
+Origin: http://example.com\r\n
+
+
+// Server response
+HTTP/1.1 101 WebSocket Protocol Handshake\r\n
+Upgrade: WebSocket\r\n
+Connection: Upgrade\r\n
+Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=\r\n
+Sec-WebSocket-Protocol: chat\r\n
+```
+
+---
+
+## The WebSocket handshake
+
+The handshake resembles HTTP so that servers can handle HTTP connections as well as WebSocket connections on the same port.
+
+--
+
+<font color="blue"> (from client request) </font> Sec-WebSocket-Key contains base64-encoded random bytes
+
+--
+
+<font color="blue"> (from server response) </font> Sec-WebSocket-Accept contains a hash of the key.
+
+--
+
+It is just to prevent caching, buffering proxy.
+
+--
+
+Once established, WebSocket data frames can be sent full-duplex, in either direction at the same time.
+
+--
+
+The data is minimally framed with just two bytes.
+
 ---
 
 # what about Socket.io?
 
+--
+
 - Socket.IO is an event-based bi-directional communication layer for realtime web applications, built atop Engine.IO
 
+--
+
 - It abstracts many transports, including AJAX long-polling and WebSockets, into a single API
+
+--
 
 - It allows developers to send and receive data without worrying about cross-browser compatibility.
 
@@ -106,6 +299,36 @@ and a high-level API
 
 - Transport handling has been moved out into a separate, framework-agnostic project: Engine.IO
 
+---
+
+# Engine.IO
+
+The main premise of Engine, and the core of its existence, is the ability to swap transports on the fly.
+A connection starts as xhr-polling, but it can switch to WebSocket.
+
+--
+
+Engine.io abstracts the differents transport mechanisms.
+
+---
+
+# How to install Socket.io, basics and demo
+
+---
+
+class: center, middle
+# Gracias :P
+
+---
+
+# References
+
+- https://www.websocket.org/
+- https://nodesource.com/blog/understanding-socketio
+- http://www.ibm.com/developerworks/web/library/wa-reverseajax1/index.html
+- https://en.wikipedia.org/wiki/WebSocket#Protocol_handshake
+- https://tools.ietf.org/html/rfc6455
+- https://github.com/socketio/engine.io
 
 </textarea>
 
