@@ -9,7 +9,6 @@ module.exports = function (io) {
 
     socket.on('keyEvent', function (data) {
       console.log(socket.username)
-      // TODO: handle possible error here
       if (socket.username && typeof socket.username.indexOf && socket.username.indexOf('coolness') != -1) {
         socket.broadcast.emit('keyEvent', data);
       }
@@ -23,6 +22,8 @@ module.exports = function (io) {
         users[username] = username;
         numUsers ++;
         added = true;
+
+        io.emit('new user', {numUsers: numUsers});
       }
 
       socket.emit('login', {
