@@ -1,8 +1,12 @@
 # InteractiveSlides
 
+## Requirements
+- npm
+- bower
+
 ## To install
 ```
-$ npm install && bower install
+$ npm install
 ```
 ## To run
 
